@@ -11,7 +11,6 @@ class DataRetriever {
   Future<List<String>> getCategories() async {
     QuerySnapshot<Map<String, dynamic>> snapshot =
         await instance.collection("quiz_set").get();
-    print("Coucou ${snapshot.docs.length}");
     var data = snapshot.docs.map((e) => e.id).toList();
     return data;
   }

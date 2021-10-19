@@ -5,7 +5,9 @@ class Questionary {
   String? category;
   int current = 0;
 
-  Questionary.fromList(this.questions, this.category);
+  Questionary.fromList(this.questions, this.category){
+    questions!.shuffle();
+  }
 
   Questionary() {
     questions = <Question>[];

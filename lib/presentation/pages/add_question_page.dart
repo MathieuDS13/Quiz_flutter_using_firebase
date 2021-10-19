@@ -15,7 +15,7 @@ class AddQuestionState extends State<AddQuestionPage> {
   late TextEditingController _controller;
   final _formKey = GlobalKey<FormState>();
   bool answer = true;
-  String dropdownValue = "biology";
+  String dropdownValue = "N/A";
   List<String>? categories;
   Future<List<String>>? future;
 
@@ -23,17 +23,20 @@ class AddQuestionState extends State<AddQuestionPage> {
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    future = BlocProvider.of<QuizBloc>(context).getCategories();
   }
 
   @override
   Widget build(BuildContext context) {
-    future = BlocProvider.of<QuizBloc>(context).getCategories();
     return FutureBuilder(
         future: future,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           Widget toShow;
           if (snapshot.hasData) {
             categories = snapshot.data;
+            dropdownValue = dropdownValue == "N/A" && categories != null
+                ? categories![0]
+                : dropdownValue;
             toShow = getBody();
           } else if (snapshot.hasError) {
             toShow = Column(
@@ -61,19 +64,18 @@ class AddQuestionState extends State<AddQuestionPage> {
                   width: 60,
                   height: 60,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Text('Awaiting data...'),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text('Awaiting data...'),
+                  ),
                 ),
               ],
             );
           }
-          return Expanded(
-            child: Center(
-              child: toShow,
-            ),
-          );
-        }); //TODO;
+          return toShow;
+        });
+    ;
   }
 
   Widget getBody() {
@@ -117,6 +119,7 @@ class AddQuestionState extends State<AddQuestionPage> {
                     onChanged: (String? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
+                        print(dropdownValue);
                       });
                     },
                     items: categories!
@@ -204,17 +207,12 @@ class AddQuestionState extends State<AddQuestionPage> {
                   ElevatedButton(
                     onPressed: () {
                       // Validate returns true if the form is valid, or false otherwise.
-                      if (_controller.text != null &&
-                          _controller.text.isNotEmpty) {
+                      if (_formKey.currentState!.validate()) {
                         BlocProvider.of<QuizBloc>(context, listen: false).add(
                             AddQuestionEvent(
                                 Question.name(_controller.text, answer),
                                 dropdownValue));
-                        //TODO modifier la catégorie
-                        //validForm(Question.name(_controller.text, answer), "biology",
-                        //context);
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
+                        _controller.clear();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Submitting question')),
                         );
@@ -231,22 +229,7 @@ class AddQuestionState extends State<AddQuestionPage> {
     );
   }
 
-  /**
-      Widget getForm(BuildContext context) {
-      return
-      }
-   **/
-
-  void validForm(Question question, String category, BuildContext context) {
-    BlocProvider.of<QuizBloc>(context, listen: false)
-        .add(AddQuestionEvent(question, category));
-    //TODO envoyer la question dans la base de données
-    //TODO effacer toute la sélection si la question a bien été rajoutée
-  }
-
   setCategories() async {
     categories = await BlocProvider.of<QuizBloc>(context).getCategories();
   }
-
-//TODO ajouter la sélection de catégorie avec un
 }
