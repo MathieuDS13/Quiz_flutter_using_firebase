@@ -17,7 +17,7 @@ class CategorySelectionPage extends StatelessWidget {
           if (snapshot.hasData) {
             children = snapshot.data!
                 .map((e) => getWidgetFromName(e, context))
-                .toList(); //TODO mapper en widget
+                .toList();
           } else if (snapshot.hasError) {
             children = <Widget>[
               const Icon(

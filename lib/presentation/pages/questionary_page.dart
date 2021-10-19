@@ -28,7 +28,7 @@ class QuestionaryPage extends StatelessWidget {
                 toShow = BlocProvider(
                     create: (context) => QuestionaryCubit(snapshot!.data!),
                     child: _MyQuizPage(
-                        title: "Questionary :")); //TODO mapper en widget
+                        title: "Questionary :"));
               } else if (snapshot.hasError) {
                 toShow = Column(
                   children: [

@@ -48,7 +48,6 @@ class ButtonGoToCategory extends StatelessWidget {
                   builder: (context) => BlocProvider.value(
                       value: BlocProvider.of<QuizBloc>(context),
                       child: CategorySelectionPage())));
-          //TODO changer de page pour afficher la sélection de catégories de questions
         },
         child: Text("Categories",
             textAlign: TextAlign.center,
@@ -78,7 +77,6 @@ class ButtonAddQuestion extends StatelessWidget {
                   builder: (context) => BlocProvider.value(
                       value: BlocProvider.of<QuizBloc>(context),
                       child: AddQuestionPage())));
-          //TODO changer de page pour afficher le formulaire de questions
         },
         child: Text("Create Question",
             textAlign: TextAlign.center,
