@@ -2,6 +2,8 @@
 
 A Quiz using Firebase for questions storage
 
+Nom de l'étudiant : DA SILVA Mathieu
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
