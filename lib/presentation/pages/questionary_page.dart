@@ -13,61 +13,53 @@ class QuestionaryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<Questionary> future =
         BlocProvider.of<QuizBloc>(context).getQuestionary(category);
-    return MaterialApp(
-        title: 'Questionary :',
-        theme: ThemeData(
-          // This is the theme of your application.
-          primarySwatch: Colors.blue,
-        ),
-        home: FutureBuilder<Questionary>(
-            future: future, // a previously-obtained Future<String> or null
-            builder:
-                (BuildContext context, AsyncSnapshot<Questionary> snapshot) {
-              Widget toShow;
-              if (snapshot.hasData) {
-                toShow = BlocProvider(
-                    create: (context) => QuestionaryCubit(snapshot!.data!),
-                    child: _MyQuizPage(
-                        title: "Questionary :"));
-              } else if (snapshot.hasError) {
-                toShow = Column(
-                  children: [
-                    Expanded(
-                      child: const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 16),
-                        child: Text('Error: ${snapshot.error}'),
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                toShow = Column(
-                  children: [
-                    SizedBox(
-                      child: CircularProgressIndicator(),
-                      width: 60,
-                      height: 60,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text('Awaiting data...'),
-                    ),
-                  ],
-                );
-              }
-              return Expanded(
-                child: Center(
-                  child: toShow,
+    return FutureBuilder<Questionary>(
+        future: future, // a previously-obtained Future<String> or null
+        builder: (BuildContext context, AsyncSnapshot<Questionary> snapshot) {
+          Widget toShow;
+          if (snapshot.hasData) {
+            toShow = BlocProvider(
+                create: (context) => QuestionaryCubit(snapshot!.data!),
+                child: _MyQuizPage(title: "Questionary :"));
+          } else if (snapshot.hasError) {
+            toShow = Column(
+              children: [
+                Expanded(
+                  child: const Icon(
+                    Icons.error_outline,
+                    color: Colors.red,
+                    size: 60,
+                  ),
                 ),
-              );
-            }));
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text('Error: ${snapshot.error}'),
+                  ),
+                ),
+              ],
+            );
+          } else {
+            toShow = Column(
+              children: [
+                SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting data...'),
+                ),
+              ],
+            );
+          }
+          return Expanded(
+            child: Center(
+              child: toShow,
+            ),
+          );
+        });
   }
 }
 
@@ -92,30 +84,29 @@ class QuizPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(title: Text(title), centerTitle: true),
         body: Container(
-            color: Colors.grey,
             child: BlocListener<QuestionaryCubit, QuestionaryState>(
-              listener: (context, state) {
-                if (state is QuestionaryBadAnswer) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text("Mauvaise réponse !"),
-                    duration: Duration(milliseconds: 300),
-                  ));
-                  if (state is QuestionaryGoodAnswer) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Bonne réponse !"),
-                      duration: Duration(milliseconds: 300),
-                    ));
-                  }
-                }
-              },
-              child: Column(
-                children: <Widget>[
-                  _getPicture(),
-                  _getQuestion(context),
-                  _getButtonRow(context)
-                ],
-              ),
-            )));
+          listener: (context, state) {
+            if (state is QuestionaryBadAnswer) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Mauvaise réponse !"),
+                duration: Duration(milliseconds: 300),
+              ));
+              if (state is QuestionaryGoodAnswer) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text("Bonne réponse !"),
+                  duration: Duration(milliseconds: 300),
+                ));
+              }
+            }
+          },
+          child: Column(
+            children: <Widget>[
+              _getPicture(),
+              _getQuestion(context),
+              _getButtonRow(context)
+            ],
+          ),
+        )));
   }
 
   _getPicture() {

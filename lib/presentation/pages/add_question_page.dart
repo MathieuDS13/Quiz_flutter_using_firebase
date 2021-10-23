@@ -93,7 +93,6 @@ class AddQuestionState extends State<AddQuestionPage> {
                 child: const Text("Create your own question :",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        color: Colors.black,
                         fontSize: 25.0,
                         fontWeight: FontWeight.bold)),
               ),
@@ -103,7 +102,6 @@ class AddQuestionState extends State<AddQuestionPage> {
                   const Text("Enter your question :",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Colors.black,
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold)),
                   DropdownButton<String>(
@@ -111,15 +109,12 @@ class AddQuestionState extends State<AddQuestionPage> {
                     icon: const Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
                     underline: Container(
                       height: 2,
-                      color: Colors.deepPurpleAccent,
                     ),
                     onChanged: (String? newValue) {
                       setState(() {
                         dropdownValue = newValue!;
-                        print(dropdownValue);
                       });
                     },
                     items: categories!
@@ -141,12 +136,7 @@ class AddQuestionState extends State<AddQuestionPage> {
                     child: Container(
                       child: TextFormField(
                         controller: _controller,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 2),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)))),
+
                         keyboardType: TextInputType.multiline,
                         maxLines: 5,
                         minLines: 1,

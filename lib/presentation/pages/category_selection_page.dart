@@ -10,46 +10,48 @@ class CategorySelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<List<String>> future =
         BlocProvider.of<QuizBloc>(context).retriever.getCategories();
-    return FutureBuilder<List<String>>(
-        future: future, // a previously-obtained Future<String> or null
-        builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
-          List<Widget> children;
-          if (snapshot.hasData) {
-            children = snapshot.data!
-                .map((e) => getWidgetFromName(e, context))
-                .toList();
-          } else if (snapshot.hasError) {
-            children = <Widget>[
-              const Icon(
-                Icons.error_outline,
-                color: Colors.red,
-                size: 60,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text('Error: ${snapshot.error}'),
-              )
-            ];
-          } else {
-            children = const <Widget>[
-              SizedBox(
-                child: CircularProgressIndicator(),
-                width: 60,
-                height: 60,
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 16),
-                child: Text('Awaiting data...'),
-              )
-            ];
-          }
-          return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: children,
-          ));
-        });
+    return Scaffold(
+      body: FutureBuilder<List<String>>(
+          future: future, // a previously-obtained Future<String> or null
+          builder: (BuildContext context, AsyncSnapshot<List<String>> snapshot) {
+            List<Widget> children;
+            if (snapshot.hasData) {
+              children = snapshot.data!
+                  .map((e) => getWidgetFromName(e, context))
+                  .toList();
+            } else if (snapshot.hasError) {
+              children = <Widget>[
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                )
+              ];
+            } else {
+              children = const <Widget>[
+                SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting data...'),
+                )
+              ];
+            }
+            return Center(
+                child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            ));
+          }),
+    );
   }
 
   Widget getWidgetFromName(String category, BuildContext context) {
@@ -71,7 +73,6 @@ class CategorySelectionPage extends StatelessWidget {
           child: Text(category,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  color: Colors.black,
                   fontSize: 30.0,
                   fontWeight: FontWeight.bold)),
         ));

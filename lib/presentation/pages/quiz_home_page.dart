@@ -3,26 +3,51 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_firebase/business_logic/blocs/quiz_bloc.dart';
 import 'package:flutter_quiz_firebase/presentation/pages/category_selection_page.dart';
+import 'package:flutter_quiz_firebase/presentation/themes/theme_notifier.dart';
+import 'package:provider/provider.dart';
 
 import 'add_question_page.dart';
 
-class QuizHomePage extends StatelessWidget {
+class QuizHomePage extends StatefulWidget {
   const QuizHomePage({Key? key}) : super(key: key);
 
   @override
+  State<QuizHomePage> createState() => _QuizHomePageState();
+}
+
+class _QuizHomePageState extends State<QuizHomePage> {
+
+  bool themeSwitch = false;
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider<QuizBloc>(
-      create: (BuildContext context) => QuizBloc(QuizInitial()),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text("Firebased Quiz"),
-          ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [ButtonAddQuestion(), ButtonGoToCategory()],
+    return Consumer<ThemeNotifier>(
+      builder: (context, theme, _) => BlocProvider<QuizBloc>(
+        create: (BuildContext context) => QuizBloc(QuizInitial()),
+        child: SafeArea(
+          child: Scaffold(
+            appBar:
+                AppBar(title: const Text("Firebased Quiz"), actions: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(right: 20.0),
+                  child: Switch(
+                    value: themeSwitch,
+                    onChanged: (bool val) {
+                       themeSwitch = val;
+                      if (val) {
+                        theme.setDarkMode();
+                      } else {
+                        theme.setLightMode();
+                      }
+                    },
+                  ))
+            ]),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [ButtonAddQuestion(), ButtonGoToCategory()],
+              ),
             ),
           ),
         ),
