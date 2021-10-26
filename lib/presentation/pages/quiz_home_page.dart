@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quiz_firebase/business_logic/blocs/quiz_bloc.dart';
+import 'package:flutter_quiz_firebase/data/dataproviders/storage_manager.dart';
 import 'package:flutter_quiz_firebase/presentation/pages/category_selection_page.dart';
 import 'package:flutter_quiz_firebase/presentation/themes/theme_notifier.dart';
 import 'package:provider/provider.dart';
@@ -16,14 +17,28 @@ class QuizHomePage extends StatefulWidget {
 }
 
 class _QuizHomePageState extends State<QuizHomePage> {
-
   bool themeSwitch = false;
+
+  @override
+  void initState() {
+    StorageManager.readData('themeMode').then((value) {
+      print('value read from storage: ' + value.toString());
+      var themeMode = value ?? 'dark';
+      if (themeMode == 'light') {
+        themeSwitch = false;
+      } else {
+        themeSwitch = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeNotifier>(
       builder: (context, theme, _) => BlocProvider<QuizBloc>(
-        create: (BuildContext context) => QuizBloc(QuizInitial()),
+        create: (BuildContext context) {
+          return QuizBloc(QuizInitial());
+        },
         child: SafeArea(
           child: Scaffold(
             appBar:
@@ -33,7 +48,7 @@ class _QuizHomePageState extends State<QuizHomePage> {
                   child: Switch(
                     value: themeSwitch,
                     onChanged: (bool val) {
-                       themeSwitch = val;
+                      themeSwitch = val;
                       if (val) {
                         theme.setDarkMode();
                       } else {
